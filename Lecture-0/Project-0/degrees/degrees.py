@@ -92,8 +92,51 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+    print('Source ID:', source, '--> Target ID:', target)
+    
+    frontier = [source]
+    explored = set()
+    path = neighbors_for_person(source)
+    paths = []
+    for p in path:
+        if p[-1] != source:
+            paths.append([p])
+            if paths[-1][-1] == target:
+                return paths[-1]
+            
+        if p[0] not in explored:
+            frontier.append(p[-1])
+            explored.add(p[0])
+            
+        
+    while frontier:
+        for key, value in movies.items():
+            if key in explored: continue # skip explored
+            
+            # continue paths,
+            # creates next frontier,
+            # updates explored set
+            frontier = []
+            for i, p in enumerate(paths):
+                path = neighbors_for_person(p[-1][-1])
+                
+                ind = True
+                for j in path:
+                    if j[0] not in explored:
+                        
+                        frontier.append(j[-1])
+                        explored.add(j[0])
+                        
+                        if ind:
+                            paths[i].append(j)
+                            ind = False
+                        else:
+                            paths.append(paths[i][:-1] + [j])
+                            
+                    if paths[i][-1][-1] == target:
+                        return paths[i]
+                    
+    return None
 
 
 def person_id_for_name(name):
